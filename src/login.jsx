@@ -24,6 +24,8 @@ function login() {
          alert(error.message);
          setIsloading(false)
         });
+    }else{
+      alert("enter fields")
     }
   };
 

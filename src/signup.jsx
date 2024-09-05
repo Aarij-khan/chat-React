@@ -1,10 +1,10 @@
 import React , {useState} from "react";
 import tick from "./assets/tick.gif";
-import { auth } from "./firebaseConfig/firebase";
+import { auth ,db} from "./firebaseConfig/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import Loader from "./loader";
-import login from "./login";
 import {Link} from "react-router-dom"
+import { doc, setDoc } from "firebase/firestore";
 
 
 function Signup() {
@@ -13,14 +13,17 @@ function Signup() {
     const [isloading, setIsloading] = useState(false);
     const signUpDatabase = () =>{
         if (Email != "" && password != "") {
-          setIsloading(true)
+          
             createUserWithEmailAndPassword(auth, Email, password)
-            .then((userCredential) => {
-              console.log(userCredential)
+            .then((res) => {
+              const uid =res.user.uid
+              setIsloading(true)
               window.location.href = "/";
               alert("Signup sucessfull")
               setEmail("");     
               setPassword("");
+              const userData = {Email,uid}
+              setDoc(doc(db, "users", uid ),userData);
 
             })
             .catch((error) => {
