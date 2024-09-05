@@ -10,7 +10,8 @@ function Home() {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         // alert(`hello ${user.email.split("@")[0]}`);
-        // ...
+        window.location.href = "./home";
+
       } else {
         window.location.href = "./login";
       }
