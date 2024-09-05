@@ -15,15 +15,16 @@ function Signup() {
         if (Email != "" && password != "") {
           
             createUserWithEmailAndPassword(auth, Email, password)
-            .then((res) => {
+            .then(async(res) => {
               const uid =res.user.uid
               setIsloading(true)
-              window.location.href = "/";
               alert("Signup sucessfull")
               setEmail("");     
               setPassword("");
               const userData = {Email,uid}
-              setDoc(doc(db, "users", uid ),userData);
+							console.log(" userData set hai", userData)
+              await setDoc(doc(db, "users", uid ),userData);
+              window.location.href = "/";
 
             })
             .catch((error) => {

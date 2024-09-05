@@ -1,14 +1,15 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth ,db } from "./firebaseConfig/firebase";
+import { auth, db } from "./firebaseConfig/firebase";
 import { Link } from "react-router-dom";
 import { collection, getDocs } from "firebase/firestore";
 
 function Home() {
+  const [showList, setshowList] = useState([]);
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        alert(`hello ${user.email.split("@")[0]}`);
+        // alert(`hello ${user.email.split("@")[0]}`);
         // ...
       } else {
         window.location.href = "./login";
@@ -16,26 +17,25 @@ function Home() {
     });
   }, []);
   useEffect(() => {
-    
- getUsers()
+    getUsers();
   }, []);
 
   async function getUsers() {
     const querySnapshot = await getDocs(collection(db, "users"));
-querySnapshot.forEach((doc) => {
-  let arr = []
-	arr.push(doc.data())
-	console.log("TCL: getUsers -> arr", arr)
-  
-  
-  
-});
+    let arr = [];
+    querySnapshot.forEach((doc) => {
+      arr.push(doc.data());
+      setshowList(arr);
+    });
   }
   return (
     <div>
       <nav className="bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700">
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-          <a href="#" className="flex items-center space-x-3 rtl:space-x-reverse">
+          <a
+            href="#"
+            className="flex items-center space-x-3 rtl:space-x-reverse"
+          >
             <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
               AARIJ-CHAT-APP
             </span>
@@ -54,10 +54,12 @@ querySnapshot.forEach((doc) => {
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 17 14"
-            >
-            </svg>
+            ></svg>
           </button>
-          <div className="hidden w-full md:block md:w-auto" id="navbar-dropdown">
+          <div
+            className="hidden w-full md:block md:w-auto"
+            id="navbar-dropdown"
+          >
             <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
               <li>
                 <a
@@ -88,6 +90,17 @@ querySnapshot.forEach((doc) => {
           </div>
         </div>
       </nav>
+      {showList.map((e, idx) => {
+        return (
+          <div key={idx} className="border border-gray-400 p-4 flex justify-between items-center">
+            <div>
+            <h1 className="text-3xl">{e.Email.split("@")[0]}</h1>
+            <h1 className="text-3xl">{e.Email}</h1>
+            </div>
+            <button className="bg-green-500 h-10 p-2 w-32 rounded-lg">Chat</button>
+          </div>
+        );
+      })}
     </div>
   );
 }
