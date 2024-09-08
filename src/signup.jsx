@@ -14,7 +14,6 @@ function Signup() {
     const [name, setName] = useState("");
     const signUpDatabase = () =>{
         if (Email != "" && password != "") {
-          
             createUserWithEmailAndPassword(auth, Email, password)
             .then(async(res) => {
               setIsloading(true);

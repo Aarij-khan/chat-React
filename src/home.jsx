@@ -105,11 +105,17 @@ function Home() {
       {showList.map((e, idx) => {
         return (
           <div key={idx} className="border border-gray-400 p-4 flex justify-between items-center">
-            <div>
+            <div className="flex w-[55%]  items-center justify-between">
             <h1 className="text-3xl">{e.name}</h1>
-            <h1 className="text-3xl">{e.Email}</h1>
+            <h1 className="text-xl">{e.Email}</h1>
             </div>
-            <button className="bg-green-500 h-10 p-2 w-32 rounded-lg" onClick={()=>Navigate("/chat",{...e,storageId})}>Chat</button>
+            <button
+          type="button"
+          onClick={()=>Navigate("/chat",{state:{...e,storageId}})}
+          class="w-32 focus:outline-none text-white bg-green-600 hover:bg-green-500 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5  dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+        >
+          Chat
+        </button>
           </div>
         );
       })}
