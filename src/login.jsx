@@ -4,11 +4,13 @@ import { useState } from "react";
 import { auth } from "./firebaseConfig/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { Link } from "react-router-dom";
+import Loader from "./loader";
 
 function login() {
   const [Email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isloading, setIsloading] = useState(false);
+  
 
   const loginToDatabase = () => {
     if (Email != "" && password != "") {
@@ -17,7 +19,6 @@ function login() {
         .then((userCredential) => {
             setIsloading(true)
             console.log(userCredential)
-            alert("Signin sucessfully")
             window.location.href = "./home"
         })
         .catch((error) => {
@@ -35,7 +36,7 @@ function login() {
         <div className="flex flex-col gap-6 items-center ">
           <img src={tick} className="h-[190px] w-[350px] object-contain" />
           <input
-            type="text"
+            type="email"
             className="w-[300px] h-[45px] sm:h-[45px] sm:w-[400px] rounded-lg p-1"
             placeholder="Enter Email address"
             value={Email}
@@ -48,8 +49,8 @@ function login() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <Link to="./signup">
-          <p className="text-white">Don't have an account</p>
+          <Link to="/signup">
+          <p className="text-white">Don't have an account ?<span className="text-blue-700"> sign up</span></p>
           </Link>
           {isloading ? (
             <Loader />

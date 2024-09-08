@@ -1,33 +1,42 @@
 import React, { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "./firebaseConfig/firebase";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { collection, getDocs } from "firebase/firestore";
 
 function Home() {
   const [showList, setshowList] = useState([]);
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // alert(`hello ${user.email.split("@")[0]}`);
-        window.location.href = "./home";
+  const [storageId, setstorageId] = useState("");
 
-      } else {
-        window.location.href = "./login";
-      }
-    });
-  }, []);
+  const Navigate = useNavigate();
+  // useEffect(() => {
+  //   onAuthStateChanged(auth, (user) => {
+  //     if (user) {
+  //       // alert(`hello ${user.email.split("@")[0]}`);
+  //       // window.location.href = "./home";
+
+  //     } else {
+  //       window.location.href = "./login";
+  //     }
+  //   });
+  // }, []);
   useEffect(() => {
     getUsers();
   }, []);
 
   async function getUsers() {
+    var getId = localStorage.getItem("user")
+    setstorageId(getId)
     const querySnapshot = await getDocs(collection(db, "users"));
     let arr = [];
     querySnapshot.forEach((doc) => {
       arr.push(doc.data());
       setshowList(arr);
     });
+  }
+  const logoutBtn = () => {
+    localStorage.removeItem("user");
+    Navigate("/login");
   }
   return (
     <div>
@@ -71,7 +80,6 @@ function Home() {
                   Home
                 </a>
               </li>
-              <li></li>
               <li>
                 <a
                   href="#"
@@ -87,6 +95,9 @@ function Home() {
                   </a>
                 </li>
               </Link>
+              <li onClick={logoutBtn } className="cursor-pointer block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
+                  logout
+              </li>
             </ul>
           </div>
         </div>
@@ -95,10 +106,10 @@ function Home() {
         return (
           <div key={idx} className="border border-gray-400 p-4 flex justify-between items-center">
             <div>
-            <h1 className="text-3xl">{e.Email.split("@")[0]}</h1>
+            <h1 className="text-3xl">{e.name}</h1>
             <h1 className="text-3xl">{e.Email}</h1>
             </div>
-            <button className="bg-green-500 h-10 p-2 w-32 rounded-lg">Chat</button>
+            <button className="bg-green-500 h-10 p-2 w-32 rounded-lg" onClick={()=>Navigate("/chat",{...e,storageId})}>Chat</button>
           </div>
         );
       })}

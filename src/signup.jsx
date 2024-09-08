@@ -11,20 +11,21 @@ function Signup() {
     const [Email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isloading, setIsloading] = useState(false);
+    const [name, setName] = useState("");
     const signUpDatabase = () =>{
         if (Email != "" && password != "") {
           
             createUserWithEmailAndPassword(auth, Email, password)
             .then(async(res) => {
+              setIsloading(true);
               const uid =res.user.uid
-              setIsloading(true)
-              alert("Signup sucessfull")
+              localStorage.setItem("user",uid)
               setEmail("");     
               setPassword("");
-              const userData = {Email,uid}
+              const userData = {Email,uid,name};
 							console.log(" userData set hai", userData)
               await setDoc(doc(db, "users", uid ),userData);
-              window.location.href = "/";
+              window.location.href = "/login";
 
             })
             .catch((error) => {
@@ -44,6 +45,13 @@ function Signup() {
           <input
             type="text"
             className="w-[300px] h-[45px] sm:h-[45px] sm:w-[400px] rounded-lg p-1"
+            placeholder="UserName"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <input
+            type="text"
+            className="w-[300px] h-[45px] sm:h-[45px] sm:w-[400px] rounded-lg p-1"
             placeholder="Enter Email address"
             value={Email}
             onChange={(e) => setEmail(e.target.value)}
@@ -56,7 +64,7 @@ function Signup() {
             onChange={(e) => setPassword(e.target.value)}
           />
             <Link to="/">
-          <p className="text-white">have an account??</p>
+          <p className="text-white">have an account ? Login</p>
           </Link>
           {isloading ? (
             <Loader />
