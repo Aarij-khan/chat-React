@@ -18,8 +18,14 @@ function login() {
       signInWithEmailAndPassword(auth, Email, password)
         .then((userCredential) => {
             setIsloading(true)
+            const uid =userCredential.user.uid
+						console.log("uid localStorage mai gayi", uid)
+            localStorage.setItem("user",uid)
             console.log(userCredential)
             window.location.href = "./home"
+            setEmail("");
+            setPassword("");
+
         })
         .catch((error) => {
          alert(error.message);
