@@ -1,18 +1,32 @@
 import React from "react";
 import tick from "./assets/tick.gif";
-import { useState } from "react";
+import { useState ,useEffect} from "react";
 import { auth } from "./firebaseConfig/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { Link } from "react-router-dom";
 import Loader from "./loader";
+import { useNavigate } from "react-router-dom";
 
 function login() {
   const [Email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isloading, setIsloading] = useState(false);
   
+ const navigate = useNavigate();
 
+  useEffect(()=>{
+    let userId =localStorage.getItem("user")
+		console.log("TCL: login -> userId", userId)
+    if (userId !== null) {
+      navigate("/home");
+    }else{
+      navigate("/");
+      
+    }
+  },[navigate])
+  
   const loginToDatabase = () => {
+
     if (Email != "" && password != "") {
     
       signInWithEmailAndPassword(auth, Email, password)

@@ -1,20 +1,10 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-function Loader({props}) {
-  const navigate = useNavigate()
-  useEffect(()=>{
-    let userId =localStorage.getItem("user")
-    if (userId !== null) {
-      navigate("/home");
-    }else{
-      navigate("/login");
-      
-    }
-  },[])
+function Loader({props,h}) {
   return (
     <div>
-      <div role="status " className={`${props}`}>
+      <div role="status " className={`${props} ${h}`}>
         <svg
           aria-hidden="true"
           class="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
