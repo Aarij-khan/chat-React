@@ -2,15 +2,25 @@ import React, { useEffect } from "react";
 import Navbar from "./navbar";
 import { storage ,db } from "./firebaseConfig/firebase";
 import { useState } from "react";
-import { doc, getDoc } from "firebase/firestore";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { doc, getDoc,updateDoc } from "firebase/firestore";
+import Swal from "sweetalert2";
 
 function Profile() {
-  const [pic, setPic] = useState("");
   const [Userinfo, setUserinfo] = useState({});
-  const handleImage = (e) => {
+
+
+  
+  const handleImage =async (e) => {
     const objectURL = URL.createObjectURL(e.target.files[0]);
     console.log("🚀 objectURL:", objectURL);
-    setPic(objectURL);
+    setUserinfo({...Userinfo,img:objectURL});
+    const storageRef = ref(storage, `Images/${Userinfo.uid}/dp`);
+    await uploadBytes(storageRef, e.target.files[0]);
+    let DownloadURL = await getDownloadURL(storageRef)
+    console.log("🚀DownloadURL:", DownloadURL)
+    Swal.fire('Image uploaded successfully')
+    await updateDoc(doc(db, "users", Userinfo?.uid), { img: DownloadURL });
   };
 
   async function getprofileUsers() {
@@ -37,10 +47,10 @@ function Profile() {
         <label className="flex w-full justify-center items-center gap-5 flex-col">
           <img
             src={
-              pic ||
+                Userinfo.img ||
               "https://i.pinimg.com/1200x/cb/45/72/cb4572f19ab7505d552206ed5dfb3739.jpg"
             }
-            className="w-[25%]"
+            className="w-[200px] mt-10 object-cover h-[200px] rounded-full"
           />
           <label
             htmlFor="img"

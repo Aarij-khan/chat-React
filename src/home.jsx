@@ -3,26 +3,17 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "./firebaseConfig/firebase";
 import { Link, useNavigate } from "react-router-dom";
 import { collection, getDocs, where ,query} from "firebase/firestore";
-import Navbar from "./navbar";
+import Navbar2 from "./navbar2";
 
 function Home() {
   const [showList, setshowList] = useState([]);
   const [storageId, setstorageId] = useState("");
 
   const Navigate = useNavigate();
-  // useEffect(() => {
-  //   onAuthStateChanged(auth, (user) => {
-  //     if (user) {
-  //       // alert(`hello ${user.email.split("@")[0]}`);
-  //       // window.location.href = "./home";
 
-  //     } else {
-  //       window.location.href = "./login";
-  //     }
-  //   });
-  // }, []);
   function checkUsers() {
     let userId =localStorage.getItem("user")
+    setstorageId(userId)
 		console.log("TCL: login -> userId", userId)
     if (userId !== null) {
       Navigate("/home");
@@ -38,9 +29,9 @@ function Home() {
 
   async function getUsers() {
     try {
-      var getId =  localStorage.getItem("user");
-      setstorageId(getId)
-      const querySnapshot = await getDocs( query(collection(db, "users"),where("uid" , "!=" ,getId)));
+      const querySnapshot = await getDocs( query(collection(db, "users"),where("uid", "!=", storageId)));
+
+      
       let arr = [];
       querySnapshot.forEach((doc) => {
         arr.push(doc.data());
@@ -58,13 +49,20 @@ function Home() {
  
   return (
     <div>
-      <Navbar/>
+      <Navbar2/>
       {showList.map((e, idx) => {
         return (
           <div key={idx} className="border border-gray-400 p-4 flex justify-between items-center">
+             <img
+            src={
+                e.img ||
+              "https://i.pinimg.com/1200x/cb/45/72/cb4572f19ab7505d552206ed5dfb3739.jpg"
+            }
+            className="w-[70px] h-[70px] object-cover rounded-full"
+          />
             <div className="flex w-[55%]  items-center justify-between">
-            <h1 className="text-3xl">{e.name}</h1>
-            <h1 className="text-xl">{e.Email}</h1>
+            <h1 className="text-2xl uppercase font-bold">{e.name}</h1>
+            <h1 className="text-xl uppercase font-bold">{e.Email}</h1>
             </div>
             <button
           type="button"

@@ -29,9 +29,9 @@ function login() {
 
     if (Email != "" && password != "") {
     
+      setIsloading(true)
       signInWithEmailAndPassword(auth, Email, password)
         .then((userCredential) => {
-            setIsloading(true)
             const uid =userCredential.user.uid
 						console.log("uid localStorage mai gayi", uid)
             localStorage.setItem("user",uid)
@@ -41,6 +41,7 @@ function login() {
             setPassword("");
 
         })
+        setIsloading(false)
         .catch((error) => {
          alert(error.message);
          setIsloading(false)
